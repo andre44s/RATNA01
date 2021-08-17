@@ -148,13 +148,21 @@ void loop() {
     speedMotor1 = 100;
     speedMotor2 = 100;
 
-    Serial.print(pwmValue1);
-    Serial.print("\t");
-    Serial.print(pwmValue2);
-    Serial.print("\t");
-    Serial.print(MAPfreq1);
-    Serial.print("\t");
-    Serial.println(MAPfreq2);
+    //    Serial.print(valMotor1);
+    //    Serial.print("\t");
+    //    Serial.print(valMotor2);
+    //    Serial.print("\t");
+    //    Serial.print(MAPfreq1);
+    //    Serial.print("\t");
+    //    Serial.println(MAPfreq2);
+
+    Serial.print(channel_1);
+    Serial.print("  ");
+    Serial.print(channel_2);
+    Serial.print("  ");
+    Serial.print(channel_3);
+    Serial.print("  ");
+    Serial.println(channel_4);
   }
 }
 
@@ -191,15 +199,6 @@ void bacaSensor() {
 void bacaRemote() {
   if (channel_1 > 900 && channel_1 < 2100 && channel_2 > 900 && channel_2 < 2100 && channel_3 > 900 && channel_3 < 2100 && channel_4 > 900 && channel_4 < 2100) {
     //Baca Speed
-
-    //    Serial.print(channel_1);
-    //    Serial.print("  ");
-    //    Serial.print(channel_2);
-    //    Serial.print("  ");
-    //    Serial.print(channel_3);
-    //    Serial.print("  ");
-    //    Serial.println(channel_4);
-
     spd = map(channel_1, 990, 2014, 0, 100);
     backspd = spd * -1;
     //Putar Kanan

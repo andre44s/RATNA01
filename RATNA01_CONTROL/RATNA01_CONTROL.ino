@@ -5,8 +5,8 @@ int32_t channel_3_start, channel_3;
 int32_t channel_4_start, channel_4;
 float spd = 0, backspd = 0;
 
-int relay[4] = {PB12, PB13, PB14, PB15};
-int millisOn = 100, millisOff = 2000, interval, currentMillis, previousMillis, pumpState = 0;
+int relay[4] = {PB15, PB14, PB13, PB12};
+int millisOn = 80, millisOff = 2000, interval, currentMillis, previousMillis, pumpState = 0;
 
 void setup() {
   Serial.begin(115200);
@@ -32,14 +32,18 @@ void setup() {
     digitalWrite(relay[i], LOW);
   }
   previousMillis = millis();
+
+  digitalWrite(relay[0], HIGH);
+  digitalWrite(relay[1], HIGH);
+  digitalWrite(relay[2], HIGH);
+  digitalWrite(relay[3], HIGH);
 }
 
 void loop() {
-  
-  //  Serial.print(" 1:"); Serial.print(channel_1);
-  //  Serial.print(" 2:"); Serial.print(channel_2);
-  //  Serial.print(" 3:"); Serial.print(channel_3);
-  //  Serial.print(" 4:"); Serial.println(channel_4);
+  Serial.print(" 1:"); Serial.print(channel_1);
+  Serial.print(" 2:"); Serial.print(channel_2);
+  Serial.print(" 3:"); Serial.print(channel_3);
+  Serial.print(" 4:"); Serial.println(channel_4);
 
   if (channel_1 <= 1000 && channel_1 > 900) {
     if (channel_2 <= 1000 && channel_2 > 900) {
@@ -47,7 +51,6 @@ void loop() {
       digitalWrite(relay[0], HIGH);
       digitalWrite(relay[1], HIGH);
       digitalWrite(relay[2], HIGH);
-      digitalWrite(relay[3], HIGH);
     }
     else if (channel_2 > 1000 && channel_2 < 2000) {
       //Middle Condition
@@ -55,8 +58,8 @@ void loop() {
     else if (channel_2 >= 2000) {
       Serial.println("ON ALL");
       pumpSpray();
-      digitalWrite(relay[2], LOW); //Ozone
-      digitalWrite(relay[3], LOW); //UV
+      digitalWrite(relay[1], LOW); //Ozone
+      digitalWrite(relay[2], LOW); //UV
     }
   }
 
@@ -64,22 +67,20 @@ void loop() {
     if (channel_2 <= 1000 && channel_2 > 900) {
       Serial.println("UV");
       digitalWrite(relay[0], HIGH); //DC Pump
-      digitalWrite(relay[1], HIGH); //DC Pump
-      digitalWrite(relay[2], HIGH); //Ozone
-      digitalWrite(relay[3], LOW); //UV
+      digitalWrite(relay[1], HIGH); //Ozone
+      digitalWrite(relay[2], LOW); //UV
     }
     else if (channel_2 > 1000 && channel_2 < 2000) {
       Serial.println("Disinfectan");
-      digitalWrite(relay[2], HIGH); //Ozone
-      digitalWrite(relay[3], HIGH); //UV
       pumpSpray();
+      digitalWrite(relay[1], HIGH); //Ozone
+      digitalWrite(relay[2], HIGH); //UV
     }
     else if (channel_2 >= 2000) {
       Serial.println("Ozon");
       digitalWrite(relay[0], HIGH); //DC Pump
-      digitalWrite(relay[1], HIGH); //DC Pump
-      digitalWrite(relay[2], LOW); //Ozone
-      digitalWrite(relay[3], HIGH); //UV
+      digitalWrite(relay[1], LOW); //Ozone
+      digitalWrite(relay[2], HIGH); //UV
     }
   }
 
@@ -87,21 +88,20 @@ void loop() {
     if (channel_2 <= 1000 && channel_2 > 900) {
       Serial.println("UV Ozon");
       digitalWrite(relay[0], HIGH); //DC Pump
-      digitalWrite(relay[1], HIGH); //DC Pump
-      digitalWrite(relay[2], LOW); //Ozone
-      digitalWrite(relay[3], LOW); //UV
+      digitalWrite(relay[1], LOW); //Ozone
+      digitalWrite(relay[2], LOW); //UV
     }
     else if (channel_2 > 1000 && channel_2 < 2000) {
       Serial.println("UV Disinfectan");
       pumpSpray();
-      digitalWrite(relay[2], HIGH); //Ozone
-      digitalWrite(relay[3], LOW); //UV
+      digitalWrite(relay[1], HIGH); //Ozone
+      digitalWrite(relay[2], LOW); //UV
     }
     else if (channel_2 >= 2000) {
       Serial.println("Ozon Disinfectan");
       pumpSpray();
-      digitalWrite(relay[2], LOW); //Ozone
-      digitalWrite(relay[3], HIGH); //UV
+      digitalWrite(relay[1], LOW); //Ozone
+      digitalWrite(relay[2], HIGH); //UV
     }
   }
 }
@@ -158,12 +158,10 @@ void pumpSpray() {
   if (pumpState == 0) {
     interval = millisOff;
     digitalWrite(relay[0], HIGH); //DC Pump
-    digitalWrite(relay[1], HIGH); //DC Pump
   }
   else if (pumpState == 1) {
     interval = millisOn;
     digitalWrite(relay[0], LOW); //DC Pump
-    digitalWrite(relay[1], LOW); //DC Pump
   }
 
   currentMillis = millis();
